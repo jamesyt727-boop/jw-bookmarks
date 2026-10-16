@@ -1,3 +1,8 @@
+---
+layout: default
+title: 应用商店描述
+---
+
 # Chrome Web Store 上架文案
 
 ## 名称

@@ -1,3 +1,8 @@
+---
+layout: default
+title: 隐私政策
+---
+
 # JW Bookmarks 隐私政策
 
 最后更新：2026-10-16

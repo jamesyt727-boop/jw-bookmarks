@@ -1,3 +1,8 @@
+---
+layout: default
+title: 权限说明
+---
+
 # 隐私标签页 —— 各权限用途论证（直接复制填写）
 
 ## bookmarks（书签）

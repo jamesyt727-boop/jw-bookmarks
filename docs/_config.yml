@@ -1,0 +1,14 @@
+# GitHub Pages (Jekyll) 配置
+# 主题必须是 GitHub 官方支持列表里的名字，否则 Pages 构建会直接失败。
+# 官方列表：Architect / Cayman / Dinky / Hacker / Leap day / Merlot /
+#          Midnight / Minima / Minimal / Modernist / Slate / Tactile / Time machine
+# 参考：https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll
+theme: jekyll-theme-minimal
+
+title: JW Bookmarks
+description: 收藏即归位 —— AI 自动分类书签的 Chrome 扩展
+lang: zh-CN
+
+# 不参与构建
+exclude:
+  - README.md
