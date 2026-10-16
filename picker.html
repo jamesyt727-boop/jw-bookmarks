@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>选择收藏夹</title>
+  <link rel="stylesheet" href="picker.css" />
+</head>
+<body>
+  <header>
+    <h1>归到哪个文件夹？</h1>
+    <div id="page-title" class="page-title"></div>
+    <div id="page-url" class="page-url"></div>
+  </header>
+
+  <main id="candidates"></main>
+
+  <div class="new-folder-row" id="new-folder-row">
+    <input id="new-folder-name" type="text" placeholder="新建文件夹名…" autocomplete="off" />
+    <button id="new-folder" class="new-folder">新建文件夹</button>
+  </div>
+
+  <footer>
+    <button id="cancel" class="cancel">保持当前位置</button>
+  </footer>
+
+  <script type="module" src="picker.js"></script>
+</body>
+</html>

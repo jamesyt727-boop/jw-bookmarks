@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "JW Bookmarks",
+  "version": "1.4.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1SfbfYRzoMMxcOIEYC28sV7C0bRQacTz0I66KAvUW35JkG8Wk51RbenQ91tIKe249LyeeMFBNCt1Pi48VKNZ6un5JrmdfeucT6wNhz888IyD8zIFlYiyekXLZVLg2xZ4nIrL7wg/reMVDaJnA5kqUb/JGrHXb2BQe+FjVZfTJpyeSAZ0ssnm/beggeBetwlDS9GiGScwvYNT2WQL8R4PZb7+1g0Fr2o4j5G/jUGAghFFy4ibhFTDxCIpJg4YaR+ym2nXW/Np/yhB59qihnqn2A2lWvRsF7FEfp2cXrHTFQUegjVzEOSeMrUYfrgWxhYl1p2QiCm/WhVS1J+aUn3iuwIDAQAB",
+  "description": "收藏时自动归位到正确文件夹：本地规则 → Jev 决策 → DeepSeek 兜底。by JamesWu",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["bookmarks", "storage", "contextMenus", "activeTab"],
+  "host_permissions": [
+    "https://api.typesafe.ai/*",
+    "https://api.deepseek.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "JW Bookmarks",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  }
+}

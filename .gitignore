@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# 依赖与构建产物
+node_modules/
+*.zip
+*.crx
+
+# 私钥（绝对不要提交）
+*.pem
+*.key
+
+# 编辑器
+.vscode/
+.idea/

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>JW Bookmarks</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span class="logo"></span>
+      <span class="title">JW Bookmarks</span>
+    </div>
+    <div class="head-actions">
+      <button id="back" class="icon-btn" title="返回" hidden>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+      <button id="toggle-settings" class="icon-btn" title="设置" aria-label="设置">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- 操作视图 -->
+  <section id="view-actions" class="view">
+    <button id="dry-run" class="btn primary">
+      分析当前页<span class="sub">不保存，只看看会归到哪</span>
+    </button>
+    <button id="save" class="btn success">收藏并自动分类</button>
+    <button id="organize" class="btn ghost">批量整理存量书签</button>
+    <div id="status" class="status"></div>
+  </section>
+
+  <!-- 整理视图 -->
+  <section id="view-organize" class="view" hidden>
+    <div class="card">
+      <div class="field">
+        <label for="org-scope">范围</label>
+        <select id="org-scope">
+          <option value="loose">仅散落书签（推荐）</option>
+          <option value="all">重塑全部（重新分类所有）</option>
+        </select>
+      </div>
+      <label class="switch wide"><input type="checkbox" id="org-automove" checked /> 高置信度直接归位</label>
+    </div>
+
+    <button id="org-start" class="btn success">开始整理</button>
+    <button id="org-stop" class="btn ghost" hidden>停止整理</button>
+
+    <div id="org-progress" hidden>
+      <div class="org-bar"><div id="org-fill"></div></div>
+      <div id="org-text" class="org-text"></div>
+    </div>
+
+    <div id="org-summary" class="org-summary" hidden></div>
+    <div id="org-review" class="org-review"></div>
+    <div id="org-hint" class="org-hint">
+      整理在后台进行，关掉这个弹窗也会继续；重开弹窗可继续看进度。
+    </div>
+
+    <div class="card archive-card">
+      <h2>一键归档</h2>
+      <p class="archive-desc">选择要归档的文件夹，挪进指定名称的归档文件夹；归档后新收藏不再扫描它们。</p>
+      <div class="field">
+        <label for="archive-name">归档名</label>
+        <input type="text" id="archive-name" placeholder="旧收藏 2026" />
+      </div>
+      <div class="archive-tools">
+        <label class="switch"><input type="checkbox" id="archive-select-all" /> 全选</label>
+        <span id="archive-count" class="archive-count"></span>
+      </div>
+      <div id="archive-list" class="archive-list"></div>
+      <button id="archive" class="btn danger">归档选中项</button>
+      <div id="archive-result" class="org-summary" hidden></div>
+    </div>
+
+    <div class="card">
+      <h2>批量新建文件夹</h2>
+      <p class="archive-desc">每行一个，建在「书签栏」下；已存在的会自动跳过。</p>
+      <textarea id="new-folders" rows="5" spellcheck="false" placeholder="AI Agent"></textarea>
+      <div class="row-actions">
+        <button id="create-folders" class="btn mini ghost">新建这些文件夹</button>
+        <span id="create-folders-status" class="status"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 设置视图 -->
+  <section id="view-settings" class="view" hidden>
+    <div class="settings-scroll">
+      <div class="card">
+        <div class="card-head">
+          <h2>Jev 决策模型</h2>
+          <label class="switch"><input type="checkbox" id="jev-enabled" /> 启用</label>
+        </div>
+        <div class="field">
+          <label for="jev-endpoint">地址</label>
+          <input type="text" id="jev-endpoint" placeholder="https://api.typesafe.ai" />
+        </div>
+        <div class="field">
+          <label for="jev-model">模型</label>
+          <input type="text" id="jev-model" placeholder="jev-latest" />
+        </div>
+        <div class="field">
+          <label for="jev-apikey">Key</label>
+          <input type="password" id="jev-apikey" placeholder="sk-..." autocomplete="off" />
+        </div>
+        <div class="row-actions">
+          <button id="test-jev" class="btn mini ghost">测试连接</button>
+          <span id="test-jev-status" class="status"></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>DeepSeek 兜底</h2>
+          <label class="switch"><input type="checkbox" id="deepseek-enabled" /> 启用</label>
+        </div>
+        <div class="field">
+          <label for="deepseek-endpoint">地址</label>
+          <input type="text" id="deepseek-endpoint" placeholder="https://api.deepseek.com" />
+        </div>
+        <div class="field">
+          <label for="deepseek-model">模型</label>
+          <input type="text" id="deepseek-model" placeholder="deepseek-flash" />
+        </div>
+        <div class="field">
+          <label for="deepseek-apikey">Key</label>
+          <input type="password" id="deepseek-apikey" placeholder="sk-..." autocomplete="off" />
+        </div>
+        <div class="row-actions">
+          <button id="test-deepseek" class="btn mini ghost">测试连接</button>
+          <span id="test-deepseek-status" class="status"></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>分类流程</h2>
+        <label class="switch wide"><input type="checkbox" id="auto-move" /> 点星标后自动搬运到目标文件夹</label>
+        <div class="field">
+          <label for="auto-save">阈值</label>
+          <input type="number" id="auto-save" min="0" max="1" step="0.05" />
+        </div>
+        <div class="field">
+          <label for="debounce">等待 ms</label>
+          <input type="number" id="debounce" min="500" step="100" />
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>本地规则</h2>
+        <textarea id="rules" rows="4" spellcheck="false" placeholder="domain:github.com => 工作/开发"></textarea>
+      </div>
+
+      <div class="card">
+        <h2>排除的文件夹</h2>
+        <p class="archive-desc">每行一个（文件夹名，或「父/子」路径）。这些文件夹不参与自动分类，也不会被自动搬进去。</p>
+        <textarea id="excluded-folders" rows="3" spellcheck="false" placeholder="待整理"></textarea>
+      </div>
+
+      <div class="card">
+        <h2>配置备份</h2>
+        <p class="archive-desc">导出含 API Key，请自己保管好。换电脑或重装后可导入恢复。</p>
+        <div class="row-actions">
+          <button id="export-config" class="btn mini ghost">导出</button>
+          <button id="import-config" class="btn mini ghost">导入</button>
+          <input type="file" id="import-file" accept="application/json,.json" hidden />
+        </div>
+        <span id="config-status" class="status"></span>
+      </div>
+
+      <p class="about">JW Bookmarks v1.4.0 · by JamesWu</p>
+    </div>
+
+    <div class="settings-footer">
+      <button id="save-settings" class="btn primary">保存</button>
+      <span id="save-status" class="status"></span>
+    </div>
+  </section>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
